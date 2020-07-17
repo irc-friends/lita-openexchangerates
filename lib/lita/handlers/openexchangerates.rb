@@ -3,9 +3,9 @@ module Lita
     class Openexchangerates < Handler
       config :app_id, type: String, required: true
 
-      route(/^currencies$/, :list_currencies, command: true, help: {
-        "currencies" => "Show valid currencies",
-      })
+#      route(/^currencies$/, :list_currencies, command: true, help: {
+#        "currencies" => "Show valid currencies",
+#      })
 
       route(/^exchange\s(.*)$/, :exchange, command: true, help: {
         "exchange FROM TO" => "Show exchange rate FROM for TO",
@@ -23,12 +23,12 @@ module Lita
       end
 
       private
-      def currencies
-        currencies_api_url = "https://openexchangerates.org/api/currencies.json"
-        req = http.get(currencies_api_url, app_id: config.app_id)
-        currencies = MultiJson.load(req.body)
-        currencies
-      end
+#      def currencies
+#        currencies_api_url = "https://openexchangerates.org/api/currencies.json"
+#        req = http.get(currencies_api_url, app_id: config.app_id)
+#        currencies = MultiJson.load(req.body)
+#        currencies
+#      end
 
       def convert(from, to)
         valid_currencies = currencies.collect {|currency, comment| currency}
