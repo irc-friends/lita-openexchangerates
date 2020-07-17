@@ -11,18 +11,18 @@ module Lita
         "exchange FROM TO" => "Show exchange rate FROM for TO",
       })
 
-      def list_currencies(chat)
-        response = currencies.map {|currency, comment| "* #{currency}: #{comment}"}.join("\n")
-        chat.reply "#{response}"
-      end
+#      def list_currencies(chat)
+#        response = currencies.map {|currency, comment| "* #{currency}: #{comment}"}.join("\n")
+#        chat.reply "#{response}"
+#      end
 
       def exchange(chat)
-        from, to = chat.matches[0][0].split(" ").map{|x| x.upcase} 
+        from, to = chat.matches[0][0].split(" ").map{|x| x.upcase}
         exchange_rate = convert(from, to)
         chat.reply "#{from} -> #{to}: #{exchange_rate}"
       end
 
-      private 
+      private
       def currencies
         currencies_api_url = "https://openexchangerates.org/api/currencies.json"
         req = http.get(currencies_api_url, app_id: config.app_id)
