@@ -11,6 +11,10 @@ module Lita
         "exchange FROM TO" => "Show exchange rate FROM for TO",
       })
 
+      route(/^convert\s(.*)$/, :convert, command: true, help: {
+        "convert FROM TO" => "Show convert rate rate FROM for TO",
+      })
+
       def list_currencies(chat)
         response = currencies.map {|currency, comment| "* #{currency}: #{comment}"}.join("\n")
 #        chat.reply "#{response}"
