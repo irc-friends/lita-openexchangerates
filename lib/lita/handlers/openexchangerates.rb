@@ -3,31 +3,32 @@ module Lita
     class Openexchangerates < Handler
       config :app_id, type: String, required: true
 
-      route(/^currencies$/, :list_currencies, command: true, help: {
+      route(/^currencies$/, :list_currencies, help: {
         "currencies" => "Show valid currencies",
       })
 
-      route(/^exchange\s(.*)$/, :exchange, command: true, help: {
+      route(/^(?:convert|exchange)\s+(.*)$/, :exchange, help: {
         "exchange FROM TO" => "Show exchange rate FROM for TO",
       })
 
-      route(/^convert\s(.*)$/, :convert, command: true, help: {
-        "convert FROM TO" => "Show convert rate rate FROM for TO",
-      })
-
-      def list_currencies(chat)
-        response = currencies.map {|currency, comment| "* #{currency}: #{comment}"}.join("\n")
-#        chat.reply "#{response}"
-        chat.reply "https://docs.openexchangerates.org/docs/supported-currencies"
+      def list_currencies(response)
+        response.reply "See: https://docs.openexchangerates.org/docs/supported-currencies"
       end
 
-      def exchange(chat)
-        from, to = chat.matches[0][0].split(" ").map{|x| x.upcase}
+      def exchange(response)
+        tokens = response.match_data[1].split.map { |t| t.upcase }
+        value, currencies = tokens.partition { |t| /[\d\.]+/.match?(t) }
+
+        from, to = currencies
+        value = value.any? ? value[0].to_f : 1.0
+
         exchange_rate = convert(from, to)
-        chat.reply "#{from} -> #{to}: #{exchange_rate}"
+
+        response.reply "#{from} \u279e #{to}: #{sprintf("%0.2f", value * exchange_rate)}"
       end
 
       private
+
       def currencies
         currencies_api_url = "https://openexchangerates.org/api/currencies.json"
         req = http.get(currencies_api_url, app_id: config.app_id)
