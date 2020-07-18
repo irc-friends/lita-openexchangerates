@@ -49,7 +49,7 @@ module Lita
         req = http.get(latest_exchange_rate_api_url, app_id: config.app_id)
         exchange_rates = MultiJson.load(req.body)
 
-        exchange_rates['rates'][from] / exchange_rates['rates'][to]
+        exchange_rates['rates'][to] / exchange_rates['rates'][from]
       end
 
       Lita.register_handler(self)
