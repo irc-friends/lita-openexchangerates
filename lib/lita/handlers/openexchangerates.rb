@@ -24,7 +24,7 @@ module Lita
 
         exchange_rate = convert(from, to)
 
-        response.reply "#{from} \u279e #{to}: #{sprintf("%0.2f", value * exchange_rate)}"
+        response.reply "#{from} \u279e #{to}: #{sprintf("%0.4f", value * exchange_rate)}"
       end
 
       private
